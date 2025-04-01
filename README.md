@@ -38,3 +38,7 @@ This part implements a PyBullet-based robotic grasping simulation using the KUKA
 - ✅ Uses `stable-baselines3` PPO algorithm
 
 ---
+
+## 🚀 How to use
+
+run kuka/demo.py to use the effect of grasping
