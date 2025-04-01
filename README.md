@@ -19,7 +19,7 @@ The environment simulates a sequential event stream with the following event typ
 
 
 
-## Part2 KUKA Grasping Environment (PyBullet + Reinforcement Learning)
+# Part2 KUKA Grasping Environment (PyBullet + Reinforcement Learning)
 
 After the previous part, we've already know the goals of chests to reach
 
@@ -27,7 +27,7 @@ This part implements a PyBullet-based robotic grasping simulation using the KUKA
 
 ---
 
-### 🚀 Features
+## 🚀 Features
 
 - ✅ Multiple target chests at 4 fixed positions
 - ✅ Action space includes `[x, y, z, gripper_cmd]`
