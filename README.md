@@ -1,5 +1,7 @@
 # Part1 Open The Chests - Parallel Event RL Environment
 
+link：https://github.com/iamurpi/RoboticProject
+
 This project simulates a simplified decision-making environment where an agent must respond to randomly occurring events such as **locked chests**, **normal chests**, **traps**, and **keys**.
 
 ## 🎮 Environment Overview
