@@ -1,4 +1,19 @@
+# Part1 Open The Chests - Parallel Event RL Environment
 
+This project simulates a simplified decision-making environment where an agent must respond to randomly occurring events such as **locked chests**, **normal chests**, **traps**, and **keys**.
+
+## 🎮 Environment Overview
+
+The environment simulates a sequential event stream with the following event types:
+
+| Event Type       | Code | Description                    | Action Effect                            |
+|------------------|------|--------------------------------|-------------------------------------------|
+| Locked Chest     | 0    | Can only be opened with key   | +2 reward (if key), -1 (if not)           |
+| Normal Chest     | 1    | Can be opened freely          | +1 reward                                 |
+| Trap             | 2    | Should be avoided             | -0.5 penalty if opened                    |
+| Key              | 3    | Grants a key if collected     | +0.5 reward, adds key to inventory        |
+
+---
 
 
 
