@@ -36,5 +36,5 @@ if __name__ == "__main__":
         return KukaGraspingEnv(render=render)
 
     # 训练代理
-    print("开始训练KUKA抓取代理...")
+    print("Start training the KUKA crawling agent...")
     model = train_kuka_agent(lambda: make_env(render=False), total_timesteps=100000)

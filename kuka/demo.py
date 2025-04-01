@@ -60,20 +60,20 @@ def interactive_demo():
 
     while True:
         try:
-            chest_idx = int(input("输入目标箱子编号(0-3)，或输入-1退出: "))
+            chest_idx = int(input("Enter the target box number (0-3), or enter -1 to exit:"))
             if chest_idx == -1:
                 break
 
             if 0 <= chest_idx <= 3:
                 demo_agent(model, target_chest_idx=chest_idx, render=True)
             else:
-                print("无效的箱子编号，请输入0-3之间的整数。")
+                print("Invalid box number, please enter an integer between 0 and 3")
         except ValueError:
-            print("请输入有效的整数。")
+            print("Please enter a valid integer.")
         except KeyboardInterrupt:
             break
 
-    print("演示结束。")
+    print("The demonstration is over.")
 
 if __name__ == "__main__":
     interactive_demo()

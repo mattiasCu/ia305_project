@@ -33,7 +33,8 @@ class KukaGraspingEnv(gym.Env):
         )
 
         # 观察：机械臂状态(关节位置和速度) + 目标箱子位置
-        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(20,), dtype=np.float32)
+        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(24,), dtype=np.float32)
+
 
         # 箱子的位置
         self.chest_positions = [
@@ -52,14 +53,14 @@ class KukaGraspingEnv(gym.Env):
     def reset(self, *, seed=None, options=None, target_chest_idx=None):
         super().reset(seed=seed)
 
-        # 初期训练时固定目标编号为 0
-        self.training_phase = True  # 你可以设置一个开关
-        if self.training_phase:
-            self.target_chest_idx = 0
+        # ✅ 每次训练或测试，根据传参决定目标箱子编号
+        if target_chest_idx is not None:
+            self.target_chest_idx = target_chest_idx
         else:
-            self.target_chest_idx = np.random.randint(0, 4)
+            self.target_chest_idx = np.random.randint(0, 4)  # ✅ 随机选一个目标
 
         self.grasp_constraint_id = None
+        self.just_grasped = False
 
         p.resetSimulation()
         p.setGravity(0, 0, -9.8)
@@ -87,7 +88,6 @@ class KukaGraspingEnv(gym.Env):
 
         observation = self._get_observation()
 
-        self.just_grasped = False
         return observation, {"target_idx": self.target_chest_idx}
 
     def reset_arm(self):
@@ -110,7 +110,11 @@ class KukaGraspingEnv(gym.Env):
         end_effector_pos = end_effector_state[0]
 
         # 组合观察
-        observation = np.array(joint_states + list(end_effector_pos) + target_chest_pos, dtype=np.float32)
+        one_hot = np.zeros(4)
+        one_hot[self.target_chest_idx] = 1.0
+        observation = np.array(joint_states + list(end_effector_pos) + target_chest_pos + list(one_hot),
+                               dtype=np.float32)
+
 
         return observation
 
@@ -190,25 +194,25 @@ class KukaGraspingEnv(gym.Env):
         done = False
         info = {"success": False}
 
-        # ✅ 每步距离 shaping 奖励（持续）
+        # 每步距离 shaping 奖励（持续）
         reward += (1.0 - np.tanh(distance * 5)) * 0.5
 
-        # ✅ 对准高度小奖励
+        # 对准高度小奖励
         if distance_xy < 0.2 and z_diff < 0.1:
             reward += 0.3
 
-        # ✅ 抓取动作奖励（立即响应）
+        # 抓取动作奖励（立即响应）
         if hasattr(self, "just_grasped") and self.just_grasped:
             reward += 0.5
             self.just_grasped = False  # 只奖励一次
 
-        # ✅ 成功抓取提起
-        if chest_pos[2] > 0.2:
+        # 成功抓取提起
+        if chest_pos[2] > 0.4:
             reward += 1.0
             done = True
             info["success"] = True
 
-        # ❌ 防撞惩罚
+        # 防撞惩罚
         if end_effector_pos[2] < 0.08:
             reward -= 0.1
 
